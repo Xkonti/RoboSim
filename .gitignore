@@ -1,6 +1,3 @@
-*.sdf
-*.log
-
 #################
 ## Visual Studio
 #################
@@ -12,6 +9,8 @@
 *.suo
 *.user
 *.sln.docstates
+*.sdf
+*.log
 
 # Build results
 
