@@ -20,9 +20,10 @@
 
 bool init();	// Pre-allegro settings, allegro setup
 bool setup();	// Allegro settings
-void events();	// Handling input events
-void update();	// Computing data
-void draw();	// Drawing what is to draw
+void events(double dt);	// Handling input events
+void update(double dt);	// Computing data
+void draw(double dt);	// Drawing what is to draw
+void cycleEnd(double dt);// End of cycle
 void close();	// Releasing resources
 
 
@@ -33,7 +34,7 @@ void close();	// Releasing resources
 XkontiConsoleColors con;
 Allegro* allegro = NULL;
 bool closeProgram = false;
-float i = 0; // TEMP
+double frame = 1; // frame count
 ALLEGRO_COLOR color;
 
 
@@ -47,11 +48,12 @@ int main(int argc, char** argv)
 	if (!setup()) return -1;
 
 	while (!closeProgram) {
-		events();
+		events( allegro->dt() );
 		if (closeProgram) break;
-		update();
+		update( allegro->dt() );
 		if (closeProgram) break;
-		draw();
+		draw( allegro->dt() );
+		cycleEnd( allegro->dt() );
 	}
 
 	close();
@@ -95,11 +97,10 @@ bool setup() {
 // EVENTS
 //////////////////////////////////////////
 
-void events() {
-	if (i == 1000) {
+void events(double dt) {
+	if (!(int(frame) % 700)) {
 		con.print("Czy zakonczyc dzialanie programu? (y/n)\n");
 		if (con.inChar() == 'y') closeProgram = true;
-		i = 0;
 	}
 }
 
@@ -108,17 +109,16 @@ void events() {
 // UPDATE
 //////////////////////////////////////////
 
-void update() {
-	al_rest(0.001);
-	float fr = (sin(i / 500) * 127);
-	float fg = (sin(i / 900) * 127);
-	float fb = (sin(i / 250) * 127);
+void update(double dt) {
+	al_rest(0.003);
+	float fr = (sin(frame / 500) * 127);
+	float fg = (sin(frame / 900) * 127);
+	float fb = (sin(frame / 250) * 127);
 	int ir = int(fr)+127;
 	int ig = int(fg)+127;
 	int ib = int(fb)+127;
 
 	color = al_map_rgb(char(ir), char(ig), char(ib));
-	i++;
 
 }
 
@@ -127,12 +127,26 @@ void update() {
 // DRAW
 //////////////////////////////////////////
 
-void draw() {
+void draw(double dt) {
 	al_clear_to_color(color);
 
 	al_flip_display();
 }
 
+
+//////////////////////////////////////////
+// CYCLEEND
+//////////////////////////////////////////
+
+void cycleEnd(double dt) {
+	if (!(int(frame) % 30)) {
+		con.print("FPS: %i\t", int(allegro->getFps()));
+		con.print("AFPS: %i\t", int(allegro->getAFps()));
+		con.print("dt: %i us\n", int(dt * 1000000));
+	}
+	allegro->cycleEnd();
+	frame++;
+}
 
 //////////////////////////////////////////
 // CLOSE

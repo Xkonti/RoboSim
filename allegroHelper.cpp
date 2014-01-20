@@ -15,18 +15,13 @@
 // ALLEGRO CONSTRUCTOR/DESTRUCTOR
 //////////////////////////////////////////
 
-Allegro::Allegro(int _screenW, int _screenH, XkontiConsoleColors* _con) {
+Allegro::Allegro(int _screenW, int _screenH, XkontiConsoleColors* _con)
+:screenW{ _screenW }, screenH{ _screenH }, con{ _con }, avrBuf{ 120 }, fps{ 0 }, aFps{ 0 }, initialized{ true }
+{
 
 #if(DEBUG_ALLEGROHELPER)
 	_con->print(debug, "- Allegro::Allegro - Creating\n");
 #endif
-
-	screenW = _screenW;
-	screenH = _screenH;
-	con = _con;
-
-
-	initialized = true;
 
 	if (!al_init()) {
 		con->print(fatal, "failed to initialize allegro!\n");
@@ -47,6 +42,9 @@ Allegro::Allegro(int _screenW, int _screenH, XkontiConsoleColors* _con) {
 	}
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 
+
+	lastTime = al_get_time();
+
 #if(DEBUG_ALLEGROHELPER)
 	con->print(debug, "- Allegro::Allegro - Created\n");
 #endif
@@ -62,4 +60,22 @@ Allegro::~Allegro() {
 #if(DEBUG_ALLEGROHELPER)
 	con->print(debug, "- Allegro::~Allegro - Destroyed\n");
 #endif
+}
+
+void Allegro::cycleEnd() {
+	fps = 1 / this->dt();
+	aFps = (aFps * (avrBuf - 1) / avrBuf) + (fps / avrBuf);
+	lastTime = al_get_time();
+}
+
+double Allegro::dt() {
+	return al_get_time() - lastTime;
+}
+
+double Allegro::getFps() {
+	return fps;
+}
+
+double Allegro::getAFps() {
+	return aFps;
 }
