@@ -21,10 +21,13 @@
     <ClCompile Include="allegroHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xkontiTextUtils.cpp">
+    <ClCompile Include="robot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="robot.cpp">
+    <ClCompile Include="interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\xkontiTextUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +35,13 @@
     <ClInclude Include="allegroHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="xkontiTextUtils.h">
+    <ClInclude Include="robot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="robot.h">
+    <ClInclude Include="interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\xkontiTextUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

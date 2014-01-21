@@ -7,12 +7,15 @@
 //////////////////////////////////////////
 
 #include <iostream>
+#include <string>
+#include <vector>
 #include <allegro5/allegro.h>
+#include "allegro5/allegro_image.h"
 
-#include "xkontiTextUtils.h"
+#include "libs/xkontiTextUtils.h"
 
 #include "allegroHelper.h"
-
+#include "interface.h"
 
 //////////////////////////////////////////
 // FUNCTION DECLARATIONS
@@ -32,7 +35,12 @@ void close();	// Releasing resources
 //////////////////////////////////////////
 
 XkontiConsoleColors con;
-Allegro* allegro = NULL;
+Allegro allegro;
+Interface inter;
+
+std::vector< std::vector<bool> > map;
+ALLEGRO_BITMAP* image = nullptr;
+unsigned int interfaceWidth = 200;		// Width of additional interface panel
 bool closeProgram = false;
 double frame = 1; // frame count
 ALLEGRO_COLOR color;
@@ -48,12 +56,12 @@ int main(int argc, char** argv)
 	if (!setup()) return -1;
 
 	while (!closeProgram) {
-		events( allegro->dt() );
+		events( allegro.dt() );
 		if (closeProgram) break;
-		update( allegro->dt() );
+		update( allegro.dt() );
 		if (closeProgram) break;
-		draw( allegro->dt() );
-		cycleEnd( allegro->dt() );
+		draw( allegro.dt() );
+		cycleEnd( allegro.dt() );
 	}
 
 	close();
@@ -68,19 +76,40 @@ int main(int argc, char** argv)
 
 bool init() {
 
-	con = XkontiConsoleColors();		// Zainicjowanie domyœlnych kolorów do konsoli
+	//con = XkontiConsoleColors();		// Zainicjowanie domyœlnych kolorów do konsoli
 
 #if(DEBUG_ENABLED)
 	con.deb("\n==== Debugowanie jest wlaczone ====\n");
 #endif
 
-	con.print("Witaj w RoboSim - Dwu i pol wymiarowym symulatorze robota!\n\nPodaj szerokosc okna:\n");
-	int _w = con.inInt();
-	con.print("\nPodaj wysokosc okna:\n");
-	int _h = con.inInt();
+	// Get user data
+	con.print("Witaj w RoboSim!\n\nPodaj nazwe mapy:\n");
+	//std::string _path = con.inString();
+	std::string _path;
+	std::cin >> _path;
 
-	allegro = new Allegro(_w, _h, &con);
-	if (!allegro->initialized) return false;
+	// Init Allegro and Interface
+	if (!allegro.init("map1.png", inter, interfaceWidth, &con)) {
+		con.print(error, "Failed to initialize Allegro class!");
+		return false;
+	}
+	
+
+	
+
+	image = al_load_bitmap("map1.png");
+
+	if (!image) {
+		con.print(error, "Failed to load map image: " + _path);
+		return false;
+	}
+
+	// Create obstruction map
+	//inter->getMap(map);
+
+	
+
+	return true;
 }
 
 
@@ -129,6 +158,7 @@ void update(double dt) {
 
 void draw(double dt) {
 	al_clear_to_color(color);
+	al_draw_bitmap(image, 5, 5, 0);
 
 	al_flip_display();
 }
@@ -140,11 +170,11 @@ void draw(double dt) {
 
 void cycleEnd(double dt) {
 	if (!(int(frame) % 30)) {
-		con.print("FPS: %i\t", int(allegro->getFps()));
-		con.print("AFPS: %i\t", int(allegro->getAFps()));
+		con.print("FPS: %i\t", int(allegro.getFps()));
+		con.print("AFPS: %i\t", int(allegro.getAFps()));
 		con.print("dt: %i us\n", int(dt * 1000000));
 	}
-	allegro->cycleEnd();
+	allegro.cycleEnd();
 	frame++;
 }
 
@@ -154,7 +184,8 @@ void cycleEnd(double dt) {
 
 void close() {
 
-	allegro->~Allegro();		// Usuñ allegro
+	al_destroy_bitmap(image);
+	allegro.~Allegro();		// Usuñ allegro
 
 #if(DEBUG_ENABLED)
 	con.deb("\n==== Enter aby zakonczyc ====\n");

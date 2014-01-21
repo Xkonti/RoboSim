@@ -47,6 +47,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,14 +72,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="allegroHelper.cpp" />
+    <ClCompile Include="interface.cpp" />
+    <ClCompile Include="libs\xkontiTextUtils.cpp" />
     <ClCompile Include="RoboSim.cpp" />
     <ClCompile Include="robot.cpp" />
-    <ClCompile Include="xkontiTextUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="allegroHelper.h" />
+    <ClInclude Include="interface.h" />
+    <ClInclude Include="libs\xkontiTextUtils.h" />
     <ClInclude Include="robot.h" />
-    <ClInclude Include="xkontiTextUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
