@@ -211,7 +211,7 @@ std::string XkontiConsoleColors::inString() {
 	while (1) {
 		_target = "";
 		SetConsoleTextAttribute(hstdout, colors[input]);
-		scanf_s("%s", &_target);
+		scanf_s("%s", _target);
 		if (_target != "") break;
 		xkontiFlushInput();
 

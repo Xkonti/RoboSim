@@ -17,7 +17,7 @@
 
 Allegro::Allegro()
 :display{ nullptr }, event_queue{ nullptr }, con{ nullptr },
-avrBuf{ 120 }, screenW{ 0 }, screenH{ 0 }, lastTime{ 0 }, fps{ 0 }, aFps{ 0 } {}
+avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastTime{ 0 }, fps{ 0 }, aFps{ 0 } {}
 
 
 Allegro::~Allegro() {
@@ -25,7 +25,6 @@ Allegro::~Allegro() {
 	con->print(debug, "- Allegro::~Allegro - Destroying\n");
 #endif
 
-	al_destroy_display(display);
 
 #if(DEBUG_ALLEGROHELPER)
 	con->print(debug, "- Allegro::~Allegro - Destroyed\n");
@@ -33,10 +32,14 @@ Allegro::~Allegro() {
 }
 
 
-bool Allegro::init(std::string _path, Interface& _inter, unsigned int _addWidth, XkontiConsoleColors* _con) {
+//////////////////////////////////////////
+// INIT
+//////////////////////////////////////////
+
+bool Allegro::init(XkontiConsoleColors* _con) {
 
 #if(DEBUG_ALLEGROHELPER)
-	_con->print(debug, "- Allegro::init - Initializing\n");
+	_con->print(debug, "-- Allegro::init - Start\n");
 #endif
 	
 	// Arguments pass
@@ -48,7 +51,7 @@ bool Allegro::init(std::string _path, Interface& _inter, unsigned int _addWidth,
 		return false;
 	}
 #if(DEBUG_ALLEGROHELPER)
-	con->print(debug, "- Allegro::init - al_init() successful\n");
+	con->print(debug, "-- Allegro::init - al_init() successful\n");
 #endif
 
 	// Initialization of Image Addon
@@ -57,21 +60,41 @@ bool Allegro::init(std::string _path, Interface& _inter, unsigned int _addWidth,
 		return false;
 	}
 #if(DEBUG_ALLEGROHELPER)
-	con->print(debug, "- Allegro::init - al_init_image_addon() successful\n");
+	con->print(debug, "-- Allegro::init - al_init_image_addon() successful\n");
 #endif
 
-	// Setup Interface
-	screenW = 800;
-	screenW = 600;
+	lastTime = al_get_time();
+
+#if(DEBUG_ALLEGROHELPER)
+	con->print(debug, "- Allegro::init - Success\n");
+#endif
+
+	return true;
+}
+
+
+//////////////////////////////////////////
+// SETUP
+//////////////////////////////////////////
+
+bool Allegro::setup(int _width, int _height) {
+
+#if(DEBUG_ALLEGROHELPER)
+	con->print(debug, "- Allegro::setup - Start\n");
+#endif
+
+	// Arguments pass
+	width = _width;
+	height = _height;
 
 	// Create display
-	display = al_create_display(screenW, screenH);
+	display = al_create_display(_width, _height);
 	if (!display) {
 		con->print(fatal, "failed to create display!\n");
 		return false;
 	}
 #if(DEBUG_ALLEGROHELPER)
-	con->print(debug, "- Allegro::init - al_create_display() successful\n");
+	con->print(debug, "-- Allegro::setup - al_create_display() successful\n");
 #endif
 
 	// Create Event Queue
@@ -83,17 +106,20 @@ bool Allegro::init(std::string _path, Interface& _inter, unsigned int _addWidth,
 	}
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 #if(DEBUG_ALLEGROHELPER)
-	con->print(debug, "- Allegro::init - al_create_event_queue() successful\n");
+	con->print(debug, "-- Allegro::setup - al_create_event_queue() successful\n");
 #endif
 
-	lastTime = al_get_time();
-
 #if(DEBUG_ALLEGROHELPER)
-	con->print(debug, "- Allegro::init - Initialized\n");
+	con->print(debug, "- Allegro::setup - Success\n");
 #endif
 
 	return true;
 }
+
+
+//////////////////////////////////////////
+// TIME FUNCTIONS
+//////////////////////////////////////////
 
 void Allegro::cycleEnd() {
 	fps = 1 / this->dt();

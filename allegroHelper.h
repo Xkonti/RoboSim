@@ -21,7 +21,8 @@ public:
 	Allegro();
 	~Allegro();
 
-	bool init(std::string _path, Interface& _inter, unsigned int _addWidth, XkontiConsoleColors* _con);
+	bool init(XkontiConsoleColors* _con);
+	bool setup(int _width, int _height);
 
 	void cycleEnd();		// Tells allegro about end of game cycle
 	double dt();			// Returns delta time. Time passed from end of last cycle.
@@ -36,7 +37,9 @@ private:
 
 	const int avrBuf;				// Average Buffer - constant value used for averages
 
-	unsigned int screenW; unsigned int screenH;		// Width and Height of screen
+	unsigned int width;				// Width and Height of screen
+	unsigned int height;			
+
 	double lastTime;				// Time of last full game cycle
 	double fps;						// Frames Per Second
 	double aFps;					// Average Frames Per Second

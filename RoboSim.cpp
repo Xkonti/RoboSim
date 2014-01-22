@@ -76,8 +76,6 @@ int main(int argc, char** argv)
 
 bool init() {
 
-	//con = XkontiConsoleColors();		// Zainicjowanie domyœlnych kolorów do konsoli
-
 #if(DEBUG_ENABLED)
 	con.deb("\n==== Debugowanie jest wlaczone ====\n");
 #endif
@@ -89,25 +87,48 @@ bool init() {
 	std::cin >> _path;
 
 	// Init Allegro and Interface
-	if (!allegro.init("map1.png", inter, interfaceWidth, &con)) {
+	if (!allegro.init(&con)) {
 		con.print(error, "Failed to initialize Allegro class!");
 		return false;
 	}
-	
+#if(DEBUG_ENABLED)
+	con.print(debug, "-- init - allegro.init() success\n");
+#endif
+	/*
+	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
+	ALLEGRO_BITMAP* _image = al_load_bitmap("map1.bmp");
 
-	
+	if (!_image) {
+		con.print(error, "Failed to load map image: " + _path);
+		return false;
+	}
 
-	image = al_load_bitmap("map1.png");
+	al_set_new_bitmap_flags(ALLEGRO_VIDEO_BITMAP);
+	image = al_load_bitmap("map1.bmp");
 
 	if (!image) {
 		con.print(error, "Failed to load map image: " + _path);
 		return false;
 	}
+	*/
+#if(DEBUG_ENABLED)
+	con.print(debug, "-- init - image map1.png - loaded\n");
+#endif
 
-	// Create obstruction map
-	//inter->getMap(map);
+	if (!inter.init(_path, interfaceWidth, &con)) {
+		con.print(error, "Failed to initialize Interface class!");
+		return false;
+	}
 
-	
+	inter.getMap(map);
+
+	if (!allegro.setup(inter.getW(), inter.getH())) {
+		con.print(error, "Failed to setup Allegro class!");
+		return false;
+	}
+#if(DEBUG_ENABLED)
+	con.print(debug, "-- init - allegro.setup() success\n");
+#endif
 
 	return true;
 }
@@ -118,6 +139,7 @@ bool init() {
 //////////////////////////////////////////
 
 bool setup() {
+	
 	return true;
 }
 
@@ -148,7 +170,6 @@ void update(double dt) {
 	int ib = int(fb)+127;
 
 	color = al_map_rgb(char(ir), char(ig), char(ib));
-
 }
 
 
@@ -158,7 +179,8 @@ void update(double dt) {
 
 void draw(double dt) {
 	al_clear_to_color(color);
-	al_draw_bitmap(image, 5, 5, 0);
+	//al_draw_bitmap(image, 0, 0, 0);
+	inter.draw(dt);
 
 	al_flip_display();
 }
