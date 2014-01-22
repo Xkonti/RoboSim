@@ -74,6 +74,7 @@
     <ClCompile Include="allegroHelper.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="libs\xkontiTextUtils.cpp" />
+    <ClCompile Include="libs\xkontiVector2d.cpp" />
     <ClCompile Include="RoboSim.cpp" />
     <ClCompile Include="robot.cpp" />
   </ItemGroup>
@@ -81,6 +82,7 @@
     <ClInclude Include="allegroHelper.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="libs\xkontiTextUtils.h" />
+    <ClInclude Include="libs\xkontiVector2d.h" />
     <ClInclude Include="robot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

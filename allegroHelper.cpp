@@ -39,7 +39,7 @@ Allegro::~Allegro() {
 bool Allegro::init(XkontiConsoleColors* _con) {
 
 #if(DEBUG_ALLEGROHELPER)
-	_con->print(debug, "-- Allegro::init - Start\n");
+	_con->print(debug, "- Allegro::init - Start\n");
 #endif
 	
 	// Arguments pass
@@ -61,6 +61,15 @@ bool Allegro::init(XkontiConsoleColors* _con) {
 	}
 #if(DEBUG_ALLEGROHELPER)
 	con->print(debug, "-- Allegro::init - al_init_image_addon() successful\n");
+#endif
+
+	// Initialization of Primitives Addon
+	if (!al_init_primitives_addon()) {
+		con->print(fatal, "Failed to initialize al_init_primitives_addon!\n");
+		return false;
+	}
+#if(DEBUG_ALLEGROHELPER)
+	con->print(debug, "-- Allegro::init - al_init_primitives_addon() successful\n");
 #endif
 
 	lastTime = al_get_time();

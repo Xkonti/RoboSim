@@ -78,6 +78,6 @@ void Interface::getMap(std::vector< std::vector<bool> >& _array) {
 }
 
 void Interface::draw(double dt) {
-
+	// Draw map
 	al_draw_bitmap(map, 0, 0, 0);
 }
