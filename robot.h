@@ -30,25 +30,25 @@ public:
 	~Robot();
 
 	// Initialization functions
-	void initBody(Vector2D _size, Vector2D _pos, float _rotation, float _maxVelocity, float _maxAVelocity);
-	void initHead(Vector2D _pos, Vector2D _rotRange, float _rangeMin, float _rangeMax, float _rangeError, unsigned int _resolution, float _rangeLess, float _rangeOver);
+	void initBody(Vector2D _size, Vector2D _pos, double _rotation, double _maxVelocity, double _maxAVelocity);
+	void initHead(Vector2D _pos, Vector2D _rotRange, double _rangeMin, double _rangeMax, double _rangeError, unsigned int _resolution, double _rangeLess, double _rangeOver);
 
 	// Set Functions
 	void setPos(Vector2D _newPos);
-	void setPos(float _x, float _y);
-	void setRotation(float _rad);
+	void setPos(double _x, double _y);
+	void setRotation(double _rad);
 
 	// Get Functions
 	Vector2D getPos();
 	Vector2D getHeadPos();
-	float getRotation();
+	double getRotation();
 	int getStatus();
 
 	// Commands Functions
-	void move(float _dist);				// Move robot forward by specified distance
-	void move(float _dist, float _rad);	// Move and turn robot
-	void turn(float _rad);				// Turn robot by specified degree value
-	std::vector<float>& scan();		// Scans terrain. Returns reference to vector of distances.
+	void move(double _dist);				// Move robot forward by specified distance
+	void move(double _dist, double _rad);	// Move and turn robot
+	void turn(double _rad);				// Turn robot by specified degree value
+	std::vector<double>& scan();		// Scans terrain. Returns reference to vector of distances.
 
 	// Periodical Functions
 	void update(double dt);
@@ -61,7 +61,7 @@ private:
 	// Body functions
 
 	// Head functions
-	float trace(float _rad);			// Measure distance from current position
+	double trace(double _rad);			// Measure distance from current position
 
 	// Outside pointers
 	std::vector< std::vector<bool> >& map;
@@ -69,19 +69,19 @@ private:
 	// Body properties
 	Vector2D size;		// Dimensions: Width, Length
 	Vector2D pos;			// Position: X, Y
-	float rotation;					// Rotation: Z axis
-	float leftDistance;				// Distance left to travel
-	float leftRotation;				// Rotation left to rotate
-	float maxVelocity;				// Max forward velocity
-	float maxAVelocity;				// Max angular velocity on Z axis (left/right)
+	double rotation;					// Rotation: Z axis
+	double leftDistance;				// Distance left to travel
+	double leftRotation;				// Rotation left to rotate
+	double maxVelocity;				// Max forward velocity
+	double maxAVelocity;				// Max angular velocity on Z axis (left/right)
 
 	// Head properties
 	Vector2D headPos;			// Head position: X, Y
 	Vector2D headRotRange;	// Head Z rotation range: from - to in deg
-	float rangeMin;			// Minimum and Maximum detection range
-	float rangeMax;
-	float rangeError;			// Error percentage on range measuring
+	double rangeMin;			// Minimum and Maximum detection range
+	double rangeMax;
+	double rangeError;			// Error percentage on range measuring
 	unsigned int resolution;	// Number of traces in left/right scan
-	float rangeLess;			// Number used when something was nearer than rangeMin
-	float rangeOver;			// Number used when nothing was detected
+	double rangeLess;			// Number used when something was nearer than rangeMin
+	double rangeOver;			// Number used when nothing was detected
 };

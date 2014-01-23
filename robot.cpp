@@ -23,7 +23,7 @@ Robot::~Robot() {}
 // INITIALIZATION FUNCTIONS
 //////////////////////////////////////////
 
-void Robot::initBody(Vector2D _size, Vector2D _pos, float _rotation, float _maxVelocity, float _maxAVelocity) {
+void Robot::initBody(Vector2D _size, Vector2D _pos, double _rotation, double _maxVelocity, double _maxAVelocity) {
 	size = _size;
 	pos = _pos;
 	rotation = _rotation;
@@ -31,7 +31,7 @@ void Robot::initBody(Vector2D _size, Vector2D _pos, float _rotation, float _maxV
 	maxAVelocity = _maxAVelocity;
 }
 
-void Robot::initHead(Vector2D _pos, Vector2D _rotRange, float _rangeMin, float _rangeMax, float _rangeError, unsigned int _resolution, float _rangeLess, float _rangeOver) {
+void Robot::initHead(Vector2D _pos, Vector2D _rotRange, double _rangeMin, double _rangeMax, double _rangeError, unsigned int _resolution, double _rangeLess, double _rangeOver) {
 	headPos = _pos;
 	headRotRange = _rotRange;
 	rangeMin = _rangeMin;
@@ -48,8 +48,8 @@ void Robot::initHead(Vector2D _pos, Vector2D _rotRange, float _rangeMin, float _
 //////////////////////////////////////////
 
 void Robot::setPos(Vector2D _newPos) { pos = _newPos; }
-void Robot::setPos(float _x, float _y) { pos.x = _x; pos.y = _y; }
-void Robot::setRotation(float _rad) { rotation = _rad; }
+void Robot::setPos(double _x, double _y) { pos.x = _x; pos.y = _y; }
+void Robot::setRotation(double _rad) { rotation = _rad; }
 
 
 //////////////////////////////////////////
@@ -58,21 +58,21 @@ void Robot::setRotation(float _rad) { rotation = _rad; }
 
 Vector2D Robot::getPos() { return pos; }
 Vector2D Robot::getHeadPos() { return pos + headPos; }
-float Robot::getRotation() { return rotation; }
+double Robot::getRotation() { return rotation; }
 
 
 //////////////////////////////////////////
 // COMMANDS FUNCTIONS
 //////////////////////////////////////////
 
-void Robot::move(float _dist) { leftDistance += _dist; }
+void Robot::move(double _dist) { leftDistance += _dist; }
 
-void Robot::move(float _dist, float _rad) {
+void Robot::move(double _dist, double _rad) {
 	leftDistance += _dist;
 	leftRotation += _rad;
 }
 
-void Robot::turn(float _rad) { leftRotation += _rad; }
+void Robot::turn(double _rad) { leftRotation += _rad; }
 
 
 //////////////////////////////////////////
@@ -109,11 +109,11 @@ void Robot::draw(double dt) {
 // HEAD FUNCTIONS
 //////////////////////////////////////////
 
-float Robot::trace(float _rad) {
+double Robot::trace(double _rad) {
 	Vector2D _dir = Vector2D(rotation);
 	_dir.rotate(_rad);
 	Vector2D _center = pos + headPos;
-	for (float i = 0; i <= rangeMax; i++) {
+	for (double i = 0; i <= rangeMax; i++) {
 		Vector2D _point = _center + (_dir * i);
 		if (map[int(_point.x)][int(_point.y)]) {
 			if (i < rangeMin) return rangeLess;

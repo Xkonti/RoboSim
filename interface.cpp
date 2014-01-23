@@ -72,7 +72,7 @@ void Interface::draw(double dt) {
 
 	// Draw points detected by robot
 	al_lock_bitmap(al_get_target_bitmap(), al_get_bitmap_format(al_get_target_bitmap()), ALLEGRO_LOCK_READWRITE);
-	for (int i = 0; i < robot->scanPoints.size(); i++) {
+	for (unsigned int i = 0; i < robot->scanPoints.size(); i++) {
 		al_put_pixel(robot->scanPoints[i].x, robot->scanPoints[i].y, al_map_rgb(10, 150, 0));
 	}
 	al_unlock_bitmap(al_get_target_bitmap());

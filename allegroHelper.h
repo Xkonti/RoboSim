@@ -20,8 +20,8 @@
 //////////////////////////////////////////
 
 void drawLine(Vector2D _start, Vector2D _end);
-void drawRect(Vector2D _center, float _width, float _height, float _rotation);
-void drawPolygon(Vector2D _center, float _width, float _rotation, unsigned int _faces);
+void drawRect(Vector2D _center, double _width, double _height, double _rotation);
+void drawPolygon(Vector2D _center, double _width, double _rotation, unsigned int _faces);
 
 
 //////////////////////////////////////////

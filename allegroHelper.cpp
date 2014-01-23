@@ -19,7 +19,7 @@ void drawLine(Vector2D _start, Vector2D _end) {
 	al_draw_line(_start.x, _start.y, _end.x, _end.y, al_map_rgb(100, 0, 0), 1);
 }
 
-void drawRect(Vector2D _center, float _width, float _height, float _rotation) {
+void drawRect(Vector2D _center, double _width, double _height, double _rotation) {
 	_width /= 2;
 	_height /= 2;
 	Vector2D _L = Vector2D(-_width, _height);
@@ -41,15 +41,15 @@ void drawRect(Vector2D _center, float _width, float _height, float _rotation) {
 	drawLine(_temp1, _temp2);
 }
 
-void drawPolygon(Vector2D _center, float _width, float _rotation, unsigned int _faces) {
+void drawPolygon(Vector2D _center, double _width, double _rotation, unsigned int _faces) {
 	_width /= 2;
-	float _step = PI * 2 / _faces;		// Angle between 2 points
-	float _angle = _rotation + (_step / 2);
+	double _step = PI * 2 / _faces;		// Angle between 2 points
+	double _angle = _rotation + (_step / 2);
 
 	Vector2D _point1 = _center + (Vector2D(_angle) * _width);
 	Vector2D _point2 = _center + (Vector2D(_angle + _step) * _width);
 
-	for (int i = 0; i < _faces; i++) {
+	for (unsigned int i = 0; i < _faces; i++) {
 		drawLine(_point1, _point2);
 		_angle += _step;
 		_point1 = _point2;

@@ -12,11 +12,11 @@
 // MISC FUNCTIONS
 //////////////////////////////////////////
 
-float radToDeg(float _rad) {
+double radToDeg(double _rad) {
 	return _rad * (180 / PI);
 }
 
-float degToRad(float _deg) {
+double degToRad(double _deg) {
 	return _deg / (180 / PI);
 }
 
@@ -26,8 +26,8 @@ float degToRad(float _deg) {
 //////////////////////////////////////////
 
 Vector2D::Vector2D() : x{ 0 }, y{ 0 } {}
-Vector2D::Vector2D(float _rad) : x{ cos(_rad) }, y{ sin(_rad) } {}
-Vector2D::Vector2D(float _x, float _y) : x{ _x }, y{ _y } {}
+Vector2D::Vector2D(double _rad) : x{ cos(_rad) }, y{ sin(_rad) } {}
+Vector2D::Vector2D(double _x, double _y) : x{ _x }, y{ _y } {}
 Vector2D::~Vector2D() {}
 
 
@@ -52,7 +52,7 @@ Vector2D Vector2D::operator * (Vector2D _a) {
 	return Vector2D(x * _a.x, y * _a.y);
 }
 
-Vector2D Vector2D::operator * (float _a) {
+Vector2D Vector2D::operator * (double _a) {
 	return Vector2D(x * _a, y * _a);
 }
 
@@ -60,7 +60,7 @@ Vector2D Vector2D::operator / (Vector2D _a) {
 	return Vector2D(x / _a.x, y / _a.y);
 }
 
-Vector2D Vector2D::operator / (float _a) {
+Vector2D Vector2D::operator / (double _a) {
 	return Vector2D(x / _a, y / _a);
 }
 
@@ -76,14 +76,14 @@ Vector2D Vector2D::forward() { Vector2D(1, 0); }
 // FUNCTIONS
 //////////////////////////////////////////
 
-float Vector2D::rad() {
+double Vector2D::rad() {
 	// I quarter
 	if (x >= 0 && y >= 0) return atan(y / x);
 	else if (x < 0) return PI + atan(y / x);
 	else return PI + PI + atan(y / x);
 }
 
-float Vector2D::length() {
+double Vector2D::length() {
 	return sqrt((x * x) + (y * y));
 }
 
@@ -92,7 +92,7 @@ Vector2D Vector2D::normalized() {
 	else return Vector2D(x / y, 1);
 }
 
-Vector2D Vector2D::rotated(float _rad) {
+Vector2D Vector2D::rotated(double _rad) {
 	return Vector2D(this->rad() + _rad) * this->length();
 }
 
@@ -112,9 +112,9 @@ void Vector2D::normalize() {
 	}
 }
 
-void Vector2D::rotate(float _rad) {
-	float _dir = this->rad() + _rad;
-	float _length = this->length();
+void Vector2D::rotate(double _rad) {
+	double _dir = this->rad() + _rad;
+	double _length = this->length();
 	x = cos(_dir) * _length;
 	y = sin(_dir) * _length;
 }
