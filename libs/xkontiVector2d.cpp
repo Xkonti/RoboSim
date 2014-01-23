@@ -35,8 +35,9 @@ Vector2D::~Vector2D() {}
 // OPERATORS
 //////////////////////////////////////////
 
-Vector2D Vector2D::operator = (Vector2D _a) {
-	return Vector2D(_a.x, _a.y);
+void Vector2D::operator = (Vector2D _a) {
+	this->x = _a.x;
+	this->y = _a.y;
 }
 
 Vector2D Vector2D::operator + (Vector2D _a) {

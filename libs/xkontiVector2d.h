@@ -36,7 +36,7 @@ public:
 	~Vector2D();
 
 	// Operators
-	Vector2D operator = (Vector2D _a);
+	void operator = (Vector2D _a);
 	Vector2D operator + (Vector2D _a);
 	Vector2D operator - (Vector2D _a);
 	Vector2D operator * (Vector2D _a);

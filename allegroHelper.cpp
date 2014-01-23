@@ -12,12 +12,60 @@
 
 
 //////////////////////////////////////////
+// GLOBAL FUNCTIONS
+//////////////////////////////////////////
+
+void drawLine(Vector2D _start, Vector2D _end) {
+	al_draw_line(_start.x, _start.y, _end.x, _end.y, al_map_rgb(100, 0, 0), 1);
+}
+
+void drawRect(Vector2D _center, float _width, float _height, float _rotation) {
+	_width /= 2;
+	_height /= 2;
+	Vector2D _L = Vector2D(-_width, _height);
+	_L.rotate(_rotation);
+	Vector2D _R = Vector2D(_width, _height);
+	_R.rotate(_rotation);
+
+	Vector2D _temp1 = _center - _R;
+	Vector2D _temp2 = _center - _L;
+	drawLine(_temp1, _temp2);
+	_temp1 = _temp2;
+	_temp2 = _center + _R;
+	drawLine(_temp1, _temp2);
+	_temp1 = _temp2;
+	_temp2 = _center + _L;
+	drawLine(_temp1, _temp2);
+	_temp1 = _temp2;
+	_temp2 = _center - _R;
+	drawLine(_temp1, _temp2);
+}
+
+void drawPolygon(Vector2D _center, float _width, float _rotation, unsigned int _faces) {
+	_width /= 2;
+	float _step = PI * 2 / _faces;		// Angle between 2 points
+	float _angle = _rotation + (_step / 2);
+
+	Vector2D _point1 = _center + (Vector2D(_angle) * _width);
+	Vector2D _point2 = _center + (Vector2D(_angle + _step) * _width);
+
+	for (int i = 0; i < _faces; i++) {
+		drawLine(_point1, _point2);
+		_angle += _step;
+		_point1 = _point2;
+		_point2 = _center + (Vector2D(_angle) * _width);
+	}
+	drawLine(_point1, _point2);
+}
+
+
+//////////////////////////////////////////
 // ALLEGRO CONSTRUCTOR/DESTRUCTOR
 //////////////////////////////////////////
 
 Allegro::Allegro()
 :display{ nullptr }, event_queue{ nullptr }, con{ nullptr },
-avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastTime{ 0 }, fps{ 0 }, aFps{ 0 } {}
+avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastFrame{ 0 }, lastTime{ 0 }, fps{ 0 }, aFps{ 0 } {}
 
 
 Allegro::~Allegro() {
@@ -130,14 +178,22 @@ bool Allegro::setup(int _width, int _height) {
 // TIME FUNCTIONS
 //////////////////////////////////////////
 
+void Allegro::timeStart() {
+	fps = 0;
+	aFps = 0;
+	lastFrame = 0;
+	lastTime = al_get_time();
+}
+
 void Allegro::cycleEnd() {
 	fps = 1 / this->dt();
 	aFps = (aFps * (avrBuf - 1) / avrBuf) + (fps / avrBuf);
+	lastFrame = al_get_time() - lastTime;
 	lastTime = al_get_time();
 }
 
 double Allegro::dt() {
-	return al_get_time() - lastTime;
+	return lastFrame;
 }
 
 double Allegro::getFps() {

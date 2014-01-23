@@ -49,8 +49,8 @@ bool closeProgram = false;
 double frame = 1; // frame count
 ALLEGRO_COLOR color;
 
-Robot robot(map);
-Logic logic(con, robot);
+Robot robot = Robot(map);
+Logic logic = Logic(con, robot);
 
 
 //////////////////////////////////////////
@@ -122,7 +122,7 @@ bool init() {
 	con.print(debug, "-- init - image map1.png - loaded\n");
 #endif
 
-	if (!inter.init(_path, interfaceWidth, &con)) {
+	if (!inter.init(_path, interfaceWidth, &con, &robot)) {
 		con.print(error, "Failed to initialize Interface class!");
 		return false;
 	}
@@ -148,7 +148,12 @@ bool init() {
 bool setup() {
 
 	logic.init();
+
+	con.print(error, "Robot x, y: %i", int(robot.getPos().x));
+	con.print(error, ", %i\n", int(robot.getPos().y));
 	
+	allegro.timeStart();
+
 	return true;
 }
 
@@ -158,7 +163,7 @@ bool setup() {
 //////////////////////////////////////////
 
 void events(double dt) {
-	if (!(int(frame) % 700)) {
+	if (!(int(frame) % 70000)) {
 		con.print("Czy zakonczyc dzialanie programu? (y/n)\n");
 		if (con.inChar() == 'y') closeProgram = true;
 	}
@@ -171,14 +176,16 @@ void events(double dt) {
 
 void update(double dt) {
 	al_rest(0.003);
-	float fr = (sin(frame / 500) * 127);
-	float fg = (sin(frame / 900) * 127);
-	float fb = (sin(frame / 250) * 127);
+	float fr = (sin(frame / 50) * 127);
+	float fg = (sin(frame / 51) * 127);
+	float fb = (sin(frame / 52) * 127);
 	int ir = int(fr)+127;
 	int ig = int(fg)+127;
 	int ib = int(fb)+127;
 
 	color = al_map_rgb(char(ir), char(ig), char(ib));
+
+	robot.setRotation(robot.getRotation() + degToRad((dt*51)));
 }
 
 
@@ -188,9 +195,8 @@ void update(double dt) {
 
 void draw(double dt) {
 	al_clear_to_color(color);
-	//al_draw_bitmap(image, 0, 0, 0);
 	inter.draw(dt);
-
+	robot.draw(dt);
 	al_flip_display();
 }
 

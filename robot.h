@@ -5,13 +5,18 @@
 // INCLUDES
 //////////////////////////////////////////
 
+#include <iostream>
+
 #include <vector>
+#include <math.h>
 #include "libs/xkontiTextUtils.h"
 #include "libs/xkontiVector2d.h"
 
 #include <allegro5/allegro.h>
 #include "allegro5/allegro_image.h"
 #include <allegro5/allegro_primitives.h>
+
+#include "allegroHelper.h"
 
 
 //////////////////////////////////////////
@@ -31,26 +36,32 @@ public:
 	// Set Functions
 	void setPos(Vector2D _newPos);
 	void setPos(float _x, float _y);
+	void setRotation(float _rad);
 
 	// Get Functions
 	Vector2D getPos();
 	Vector2D getHeadPos();
+	float getRotation();
+	int getStatus();
 
+	// Commands Functions
 	void move(float _dist);				// Move robot forward by specified distance
-	void move(float _dist, float _deg);	// Move and turn robot
-	void turn(float _deg);				// Turn robot by specified degree value
+	void move(float _dist, float _rad);	// Move and turn robot
+	void turn(float _rad);				// Turn robot by specified degree value
 	std::vector<float>& scan();		// Scans terrain. Returns reference to vector of distances.
 
-	void draw();
+	// Periodical Functions
+	void update(double dt);
+	void draw(double dt);
+
+	// Public Variables
+	std::vector<Vector2D> scanPoints;
 
 private:
 	// Body functions
 
 	// Head functions
 	float trace(float _rad);			// Measure distance from current position
-
-	// Drawing functions
-	void drawRect(float _centerX, float _centerY, float _width, float _height, float _rotation);
 
 	// Outside pointers
 	std::vector< std::vector<bool> >& map;
@@ -66,12 +77,11 @@ private:
 
 	// Head properties
 	Vector2D headPos;			// Head position: X, Y
-	float headRotation;					// Head rotation: Z
 	Vector2D headRotRange;	// Head Z rotation range: from - to in deg
 	float rangeMin;			// Minimum and Maximum detection range
 	float rangeMax;
-	float rangeError;					// Error percentage on range measuring
-	unsigned int resolution;					// Number of traces in left/right scan
-	float rangeLess;
-	float rangeOver;
+	float rangeError;			// Error percentage on range measuring
+	unsigned int resolution;	// Number of traces in left/right scan
+	float rangeLess;			// Number used when something was nearer than rangeMin
+	float rangeOver;			// Number used when nothing was detected
 };

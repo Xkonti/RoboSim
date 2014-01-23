@@ -24,6 +24,9 @@ public:
 	~Logic();
 
 	bool init();
+
+	// Periodical Functions
+	void update(double dt);
 private:
 	XkontiConsoleColors& con;
 	Robot& robot;

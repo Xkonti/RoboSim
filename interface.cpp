@@ -17,19 +17,17 @@ typedef std::string string;
 //////////////////////////////////////////
 
 Interface::Interface()
-:con{ nullptr }, map{ nullptr }, mapScan{ nullptr }, overlay{ nullptr },
+:con{ nullptr }, map{ nullptr }, robot{ nullptr },
 mapW{ 0 }, mapH{ 0 }, intW{ 0 }, intH{ 0 }, addW{ 0 } {}
 
 Interface::~Interface() {
-	al_destroy_bitmap(map);
-	al_destroy_bitmap(mapScan);
-	al_destroy_bitmap(overlay);
 }
 
-bool Interface::init(string _mapPath, int _width, XkontiConsoleColors* _con) {
+bool Interface::init(string _mapPath, int _width, XkontiConsoleColors* _con, Robot* _robot) {
 
 	addW = _width;
 	con = _con;
+	robot = _robot;
 
 	// Load map from file
 	map = al_load_bitmap(_mapPath.c_str());
@@ -44,19 +42,11 @@ bool Interface::init(string _mapPath, int _width, XkontiConsoleColors* _con) {
 	intW = mapW + addW;
 	intH = mapH;
 
-	// Create mapScan
-	mapScan = al_create_bitmap(mapW, mapH);
-	if (!mapScan) {
-		con->print(error, "Failed to create mapScan");
-		return false;
-	}
-
-	// Create overlay
-	overlay = al_create_bitmap(intW, intH);
-	if (!overlay) {
-		con->print(error, "Failed to create overlay");
-		return false;
-	}
+	robot->scanPoints.push_back(Vector2D(10, 15));
+	robot->scanPoints.push_back(Vector2D(64, 0));
+	robot->scanPoints.push_back(Vector2D(50, 44));
+	robot->scanPoints.push_back(Vector2D(102, 80));
+	robot->scanPoints.push_back(Vector2D(32, 81));
 
 	return true;
 }
@@ -78,6 +68,12 @@ void Interface::getMap(std::vector< std::vector<bool> >& _array) {
 }
 
 void Interface::draw(double dt) {
-	// Draw map
-	al_draw_bitmap(map, 0, 0, 0);
+	//al_draw_bitmap(map, 0, 0, 0);
+
+	// Draw points detected by robot
+	al_lock_bitmap(al_get_target_bitmap(), al_get_bitmap_format(al_get_target_bitmap()), ALLEGRO_LOCK_READWRITE);
+	for (int i = 0; i < robot->scanPoints.size(); i++) {
+		al_put_pixel(robot->scanPoints[i].x, robot->scanPoints[i].y, al_map_rgb(10, 150, 0));
+	}
+	al_unlock_bitmap(al_get_target_bitmap());
 }
