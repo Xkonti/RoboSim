@@ -14,9 +14,12 @@
 #include <allegro5/allegro_primitives.h>
 
 #include "libs/xkontiTextUtils.h"
+#include "libs/xkontiVector2d.h"
 
 #include "allegroHelper.h"
 #include "interface.h"
+#include "robot.h"
+#include "logic.h"
 
 //////////////////////////////////////////
 // FUNCTION DECLARATIONS
@@ -45,6 +48,9 @@ unsigned int interfaceWidth = 200;		// Width of additional interface panel
 bool closeProgram = false;
 double frame = 1; // frame count
 ALLEGRO_COLOR color;
+
+Robot robot(map);
+Logic logic(con, robot);
 
 
 //////////////////////////////////////////
@@ -140,6 +146,8 @@ bool init() {
 //////////////////////////////////////////
 
 bool setup() {
+
+	logic.init();
 	
 	return true;
 }
