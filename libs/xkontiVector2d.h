@@ -33,6 +33,7 @@ public:
 	Vector2D();
 	Vector2D(double _rad);
 	Vector2D(double _x, double _y);
+	Vector2D(Vector2D _vec1, Vector2D _vec2);
 	~Vector2D();
 
 	// Operators
@@ -43,6 +44,8 @@ public:
 	Vector2D operator * (double _a);
 	Vector2D operator / (Vector2D _a);
 	Vector2D operator / (double _a);
+	bool operator == (Vector2D _right);
+	bool operator != (Vector2D _right);
 
 	// Constants
 	inline Vector2D forward();
@@ -50,6 +53,7 @@ public:
 	// Functions
 	double rad();		// Returns direction of vector in radians
 	double length();	// Returns length of vector
+	double distance(Vector2D _vec1, Vector2D _vec2);
 	Vector2D normalized();			// Returns normalized vector
 	Vector2D rotated(double _rad);	// Returns rotated vector
 

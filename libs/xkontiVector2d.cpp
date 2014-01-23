@@ -28,6 +28,7 @@ double degToRad(double _deg) {
 Vector2D::Vector2D() : x{ 0 }, y{ 0 } {}
 Vector2D::Vector2D(double _rad) : x{ cos(_rad) }, y{ sin(_rad) } {}
 Vector2D::Vector2D(double _x, double _y) : x{ _x }, y{ _y } {}
+Vector2D::Vector2D(Vector2D _vec1, Vector2D _vec2) : x{ _vec2.x - _vec1.x }, y{ _vec2.y - _vec1.y } {}
 Vector2D::~Vector2D() {}
 
 
@@ -64,6 +65,16 @@ Vector2D Vector2D::operator / (double _a) {
 	return Vector2D(x / _a, y / _a);
 }
 
+bool Vector2D::operator == (Vector2D _right) {
+	if (x == _right.x && y == _right.y) return true;
+	else return false;
+}
+
+bool Vector2D::operator != (Vector2D _right) {
+	if (x != _right.x || y != _right.y) return true;
+	else return false;
+}
+
 
 //////////////////////////////////////////
 // CONSTANTS
@@ -85,6 +96,10 @@ double Vector2D::rad() {
 
 double Vector2D::length() {
 	return sqrt((x * x) + (y * y));
+}
+
+double Vector2D::distance(Vector2D _vec1, Vector2D _vec2) {
+	return (_vec2 - _vec1).length();
 }
 
 Vector2D Vector2D::normalized() {
