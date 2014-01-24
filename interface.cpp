@@ -16,18 +16,17 @@ typedef std::string string;
 // INTERFACE CONSTRUCTOR/DESTRUCTOR
 //////////////////////////////////////////
 
-Interface::Interface()
-:con{ nullptr }, map{ nullptr }, robot{ nullptr },
+Interface::Interface(std::vector<Vector2D>& _scanPoints)
+:scanPoints{ _scanPoints }, con{ nullptr }, map{ nullptr },
 mapW{ 0 }, mapH{ 0 }, intW{ 0 }, intH{ 0 }, addW{ 0 } {}
 
 Interface::~Interface() {
 }
 
-bool Interface::init(string _mapPath, int _width, XkontiConsoleColors* _con, Robot* _robot) {
+bool Interface::init(string _mapPath, int _width, XkontiConsoleColors* _con) {
 
 	addW = _width;
 	con = _con;
-	robot = _robot;
 
 	// Load map from file
 	map = al_load_bitmap(_mapPath.c_str());
@@ -41,12 +40,6 @@ bool Interface::init(string _mapPath, int _width, XkontiConsoleColors* _con, Rob
 	mapH = al_get_bitmap_height(map);
 	intW = mapW + addW;
 	intH = mapH;
-
-	robot->scanPoints.push_back(Vector2D(10, 15));
-	robot->scanPoints.push_back(Vector2D(64, 0));
-	robot->scanPoints.push_back(Vector2D(50, 44));
-	robot->scanPoints.push_back(Vector2D(102, 80));
-	robot->scanPoints.push_back(Vector2D(32, 81));
 
 	return true;
 }
@@ -72,8 +65,8 @@ void Interface::draw(double dt) {
 
 	// Draw points detected by robot
 	al_lock_bitmap(al_get_target_bitmap(), al_get_bitmap_format(al_get_target_bitmap()), ALLEGRO_LOCK_READWRITE);
-	for (unsigned int i = 0; i < robot->scanPoints.size(); i++) {
-		al_put_pixel(robot->scanPoints[i].x, robot->scanPoints[i].y, al_map_rgb(10, 150, 0));
+	for (unsigned int i = 0; i < scanPoints.size(); i++) {
+		al_put_pixel(scanPoints[i].x, scanPoints[i].y, al_map_rgba_f(0, 0, 0, 0.05));
 	}
 	al_unlock_bitmap(al_get_target_bitmap());
 }

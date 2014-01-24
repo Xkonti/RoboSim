@@ -12,9 +12,10 @@
 #include <allegro5/allegro.h>
 #include "allegro5/allegro_image.h"
 #include <allegro5/allegro_primitives.h>
-#include "robot.h"
-#include "allegroHelper.h"
+//#include "allegroHelper.h"
 
+
+//ALLEGRO_COLOR BLACK_x5 = al_map_rgba_f(0, 0, 0, 0.05);
 
 //////////////////////////////////////////
 // INTERFACE CLASS
@@ -22,10 +23,10 @@
 
 class Interface {
 public:
-	Interface();
+	Interface(std::vector<Vector2D>& _scanPoints);
 	~Interface();
 
-	bool init(std::string _mapPath, int _width, XkontiConsoleColors* _con, Robot* _robot);
+	bool init(std::string _mapPath, int _width, XkontiConsoleColors* _con);
 	unsigned int getW(){ return intW; }
 	unsigned int getH(){ return intH; }
 	unsigned int getMapW(){ return mapW; }
@@ -35,10 +36,9 @@ public:
 
 	void update(double dt);
 	void draw(double dt);
-
-	Robot* robot;
 private:
 	XkontiConsoleColors* con;
+	std::vector<Vector2D>& scanPoints;
 
 	ALLEGRO_BITMAP* map;			// Loaded map bitmap
 

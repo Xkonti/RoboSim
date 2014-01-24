@@ -65,7 +65,7 @@ void drawPolygon(Vector2D _center, double _width, double _rotation, unsigned int
 
 Allegro::Allegro()
 :display{ nullptr }, event_queue{ nullptr }, con{ nullptr },
-avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastFrame{ 0 }, lastTime{ 0 }, fps{ 0 }, aFps{ 0 } {}
+avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastFrame{ 1/60 }, lastTime{ 0 }, fps{ 60 }, aFps{ 60 } {}
 
 
 Allegro::~Allegro() {
@@ -179,14 +179,14 @@ bool Allegro::setup(int _width, int _height) {
 //////////////////////////////////////////
 
 void Allegro::timeStart() {
-	fps = 0;
-	aFps = 0;
-	lastFrame = 0;
+	fps = 60;
+	aFps = 60;
+	lastFrame = 1 / 60;
 	lastTime = al_get_time();
 }
 
 void Allegro::cycleEnd() {
-	fps = 1 / this->dt();
+	fps = 1 / lastFrame;
 	aFps = (aFps * (avrBuf - 1) / avrBuf) + (fps / avrBuf);
 	lastFrame = al_get_time() - lastTime;
 	lastTime = al_get_time();

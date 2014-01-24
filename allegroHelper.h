@@ -13,8 +13,6 @@
 #include <allegro5/allegro_primitives.h>
 #include "interface.h"
 
-
-
 //////////////////////////////////////////
 // GLOBAL FUNCTIONS
 //////////////////////////////////////////
@@ -48,7 +46,7 @@ public:
 private:
 	XkontiConsoleColors* con;
 
-	const int avrBuf;				// Average Buffer - constant value used for averages
+	const double avrBuf;				// Average Buffer - constant value used for averages
 
 	unsigned int width;				// Width and Height of screen
 	unsigned int height;			

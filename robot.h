@@ -26,7 +26,7 @@
 class Robot {
 public:
 	// Constuctor & Destructor
-	Robot(std::vector< std::vector<bool> >& _map);
+	Robot(std::vector< std::vector<bool> >& _map, std::vector<Vector2D>& scanPoints);
 	~Robot();
 
 	// Initialization functions
@@ -42,20 +42,26 @@ public:
 	Vector2D getPos();
 	Vector2D getHeadPos();
 	double getRotation();
-	int getStatus();
+	Vector2D getSize();
+	unsigned int getResolution();
+	double getHeadStep();
+	Vector2D getHeadRotRange();
+	double getMaxRange();
+	double getMinRange();
+
+	double getIdealStep(double _distance);
+
+	bool isBusy();
 
 	// Commands Functions
 	void move(double _dist);				// Move robot forward by specified distance
 	void move(double _dist, double _rad);	// Move and turn robot
 	void turn(double _rad);				// Turn robot by specified degree value
-	std::vector<double>& scan();		// Scans terrain. Returns reference to vector of distances.
+	std::vector<double> scan();		// Scans terrain. Returns reference to vector of distances.
 
 	// Periodical Functions
 	void update(double dt);
 	void draw(double dt);
-
-	// Public Variables
-	std::vector<Vector2D> scanPoints;
 
 private:
 	// Body functions
@@ -65,6 +71,7 @@ private:
 
 	// Outside pointers
 	std::vector< std::vector<bool> >& map;
+	std::vector<Vector2D>& scanPoints;
 
 	// Body properties
 	Vector2D size;		// Dimensions: Width, Length

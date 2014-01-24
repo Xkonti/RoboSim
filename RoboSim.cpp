@@ -40,16 +40,19 @@ void close();	// Releasing resources
 
 XkontiConsoleColors con;
 Allegro allegro;
-Interface inter;
+
+Vector2D _tempDir(degToRad(52));
 
 std::vector< std::vector<bool> > map;
+std::vector<Vector2D> scanPoints;
 ALLEGRO_BITMAP* image = nullptr;
 unsigned int interfaceWidth = 200;		// Width of additional interface panel
 bool closeProgram = false;
 double frame = 1; // frame count
 ALLEGRO_COLOR color;
 
-Robot robot = Robot(map);
+Interface inter = Interface(scanPoints);
+Robot robot = Robot(map, scanPoints);
 Logic logic = Logic(con, robot);
 
 
@@ -122,7 +125,7 @@ bool init() {
 	con.print(debug, "-- init - image map1.png - loaded\n");
 #endif
 
-	if (!inter.init(_path, interfaceWidth, &con, &robot)) {
+	if (!inter.init(_path, interfaceWidth, &con)) {
 		con.print(error, "Failed to initialize Interface class!");
 		return false;
 	}
@@ -176,16 +179,17 @@ void events(double dt) {
 
 void update(double dt) {
 	al_rest(0.003);
-	float fr = (sin(frame / 50) * 127);
-	float fg = (sin(frame / 51) * 127);
-	float fb = (sin(frame / 52) * 127);
+	float fr = (sin(frame / 150) * 127);
+	float fg = (sin(frame / 151) * 127);
+	float fb = (sin(frame / 152) * 127);
 	int ir = int(fr)+127;
 	int ig = int(fg)+127;
 	int ib = int(fb)+127;
 
 	color = al_map_rgb(char(ir), char(ig), char(ib));
 
-	robot.setRotation(robot.getRotation() + degToRad((dt*51)));
+	robot.update(dt);
+	logic.update(dt);
 }
 
 
@@ -209,7 +213,8 @@ void cycleEnd(double dt) {
 	if (!(int(frame) % 30)) {
 		con.print("FPS: %i\t", int(allegro.getFps()));
 		con.print("AFPS: %i\t", int(allegro.getAFps()));
-		con.print("dt: %i us\n", int(dt * 1000000));
+		con.print("PTS: %i\n", scanPoints.size());
+		//con.print("dt: %i us\n", int(dt * 1000000));
 	}
 	allegro.cycleEnd();
 	frame++;

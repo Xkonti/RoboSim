@@ -25,10 +25,14 @@ public:
 
 	bool init();
 
+	double scan();
+
 	// Periodical Functions
 	void update(double dt);
 private:
 	XkontiConsoleColors& con;
 	Robot& robot;
+
+	unsigned int frame;
 
 };

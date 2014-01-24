@@ -14,7 +14,7 @@
 // ROBOT CONSTRUCTOR/DESTRUCTOR
 //////////////////////////////////////////
 
-Robot::Robot(std::vector< std::vector<bool> >& _map) :map{ _map }, size{ Vector2D() }, pos{ Vector2D() }, rotation{ 0 }, leftDistance{ 0 }, leftRotation{ 0 }, maxVelocity{ 0 }, maxAVelocity{ 0 },
+Robot::Robot(std::vector< std::vector<bool> >& _map, std::vector<Vector2D>& _scanPoints) :map{ _map }, scanPoints{ _scanPoints }, size{ Vector2D() }, pos{ Vector2D() }, rotation{ 0 }, leftDistance{ 0 }, leftRotation{ 0 }, maxVelocity{ 0 }, maxAVelocity{ 0 },
 headPos{ Vector2D() }, headRotRange{ Vector2D() }, rangeMin{ 0 }, rangeMax{ 0 }, rangeError{ 0 }, resolution{ 0 }, rangeLess{ 0 }, rangeOver{ 0 } {}
 Robot::~Robot() {}
 
@@ -59,6 +59,19 @@ void Robot::setRotation(double _rad) { rotation = _rad; }
 Vector2D Robot::getPos() { return pos; }
 Vector2D Robot::getHeadPos() { return pos + headPos; }
 double Robot::getRotation() { return rotation; }
+Vector2D Robot::getSize() { return size; }
+unsigned int Robot::getResolution() { return resolution; }
+double Robot::getHeadStep() { return (abs(headRotRange.x) + abs(headRotRange.y)) / (resolution - 1); }
+Vector2D Robot::getHeadRotRange() { return headRotRange; }
+double Robot::getMaxRange() { return rangeMax; }
+double Robot::getMinRange() { return rangeMin; }
+
+double Robot::getIdealStep(double _distance) { return atan(size.x / 2 / _distance); }
+
+bool Robot::isBusy() {
+	if (leftDistance == 0 && leftRotation == 0) return false;
+	else return true;
+}
 
 
 //////////////////////////////////////////
@@ -72,7 +85,17 @@ void Robot::move(double _dist, double _rad) {
 	leftRotation += _rad;
 }
 
-void Robot::turn(double _rad) { leftRotation += _rad; }
+void Robot::turn(double _rad) {
+	leftRotation += _rad; }
+
+std::vector<double> Robot::scan() {
+	std::vector<double> _data;
+	double _step = (abs(headRotRange.x) + abs(headRotRange.y)) / (resolution - 1);
+	for (unsigned int i = 0; i < resolution; i++) {
+		_data.push_back(this->trace(headRotRange.x + (_step * i)));
+	}
+	return _data;
+}
 
 
 //////////////////////////////////////////
@@ -81,6 +104,51 @@ void Robot::turn(double _rad) { leftRotation += _rad; }
 
 void Robot::update(double dt) {
 
+	// Applying Rotation
+	if (leftRotation > 0) {
+		if (leftRotation > maxAVelocity * dt) {
+			rotation += maxAVelocity * dt;
+			leftRotation -= maxAVelocity * dt;
+		}
+		else {
+			rotation += leftRotation * dt;
+			leftRotation = 0;
+		}
+	}
+	else if (leftRotation < 0) {
+		if (leftRotation < -maxAVelocity * dt) {
+			rotation -= maxAVelocity * dt;
+			leftRotation += maxAVelocity * dt;
+		}
+		else {
+			rotation += leftRotation * dt;
+			leftRotation = 0;
+		}
+	}
+
+	// Applying Position
+	if (leftRotation == 0) {
+		if (leftDistance > 0) {
+			if (leftDistance > maxVelocity * dt) {
+				pos = pos + (Vector2D(rotation) * maxVelocity * dt);
+				leftDistance -= maxVelocity * dt;
+			}
+			else {
+				pos = pos + (Vector2D(rotation) * leftDistance * dt);
+				leftDistance = 0;
+			}
+		}
+		else if (leftDistance < 0) {
+			if (leftDistance < -maxVelocity * dt) {
+				pos = pos - (Vector2D(rotation) * maxVelocity * dt);
+				leftDistance += maxVelocity * dt;
+			}
+			else {
+				pos = pos + (Vector2D(rotation) * leftDistance * dt);
+				leftDistance = 0;
+			}
+		}
+	}
 }
 
 void Robot::draw(double dt) {
@@ -96,7 +164,14 @@ void Robot::draw(double dt) {
 	drawLine(pos + _temp1, pos + _temp2);
 
 	// Draw Head
-	drawPolygon(pos+headPos.rotated(rotation), size.x/4, rotation, 6);
+	Vector2D _head = pos + headPos.rotated(rotation);
+	drawPolygon(_head, size.x/4, rotation+PI, 3);
+
+	// Draw Robot Sight Rays
+	double _step = this->getHeadStep();
+	for (unsigned int i = 0; i < resolution; i++) {
+		drawLine(_head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMin), _head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMax));
+	}
 }
 
 
