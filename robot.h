@@ -48,6 +48,10 @@ public:
 	Vector2D getHeadRotRange();
 	double getMaxRange();
 	double getMinRange();
+	double getRangeLess();
+	double getRangeOver();
+	double getMaxVelocity();
+	double getMaxAVelocity();
 
 	double getIdealStep(double _distance);
 

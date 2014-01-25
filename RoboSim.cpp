@@ -179,6 +179,7 @@ void events(double dt) {
 
 void update(double dt) {
 	al_rest(0.003);
+	/*
 	float fr = (sin(frame / 150) * 127);
 	float fg = (sin(frame / 151) * 127);
 	float fb = (sin(frame / 152) * 127);
@@ -187,9 +188,11 @@ void update(double dt) {
 	int ib = int(fb)+127;
 
 	color = al_map_rgb(char(ir), char(ig), char(ib));
-
-	robot.update(dt);
-	logic.update(dt);
+	*/
+	if (robot.getPos().x > 5 && robot.getPos().x < inter.getMapW() - 5 && robot.getPos().y > 5 && robot.getPos().y < inter.getMapH() - 5) {
+		robot.update(dt);
+		logic.update(dt);
+	}
 }
 
 
@@ -198,7 +201,7 @@ void update(double dt) {
 //////////////////////////////////////////
 
 void draw(double dt) {
-	al_clear_to_color(color);
+	al_clear_to_color(al_map_rgb(255,255,255));
 	inter.draw(dt);
 	robot.draw(dt);
 	al_flip_display();

@@ -25,7 +25,12 @@ public:
 
 	bool init();
 
-	double scan();
+	std::vector<double> scan();
+	Vector2D computeMovement(std::vector<double> _scan);
+	double computeRotation(std::vector<double>& _scan);
+	double computeVelocity(std::vector<double>& _scan);
+	double computeDataAverage(std::vector<double>& _scan);
+	double computeLinearMultipiler(double _minPercentage, double _maxData, double _data);
 
 	// Periodical Functions
 	void update(double dt);
@@ -34,5 +39,7 @@ private:
 	Robot& robot;
 
 	unsigned int frame;
+
+	double stepVelocity;
 
 };

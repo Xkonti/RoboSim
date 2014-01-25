@@ -65,6 +65,10 @@ double Robot::getHeadStep() { return (abs(headRotRange.x) + abs(headRotRange.y))
 Vector2D Robot::getHeadRotRange() { return headRotRange; }
 double Robot::getMaxRange() { return rangeMax; }
 double Robot::getMinRange() { return rangeMin; }
+double Robot::getRangeLess() { return rangeLess; }
+double Robot::getRangeOver() { return rangeOver; }
+double Robot::getMaxVelocity() { return maxVelocity; }
+double Robot::getMaxAVelocity() { return maxAVelocity; }
 
 double Robot::getIdealStep(double _distance) { return atan(size.x / 2 / _distance); }
 
@@ -89,6 +93,8 @@ void Robot::turn(double _rad) {
 	leftRotation += _rad; }
 
 std::vector<double> Robot::scan() {
+	if (scanPoints.size() > resolution * 5) scanPoints.clear();
+
 	std::vector<double> _data;
 	double _step = (abs(headRotRange.x) + abs(headRotRange.y)) / (resolution - 1);
 	for (unsigned int i = 0; i < resolution; i++) {
@@ -167,11 +173,13 @@ void Robot::draw(double dt) {
 	Vector2D _head = pos + headPos.rotated(rotation);
 	drawPolygon(_head, size.x/4, rotation+PI, 3);
 
+	// /*
 	// Draw Robot Sight Rays
 	double _step = this->getHeadStep();
 	for (unsigned int i = 0; i < resolution; i++) {
 		drawLine(_head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMin), _head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMax));
 	}
+	// */
 }
 
 
@@ -185,16 +193,33 @@ void Robot::draw(double dt) {
 //////////////////////////////////////////
 
 double Robot::trace(double _rad) {
-	Vector2D _dir = Vector2D(rotation);
+	// _dir is direction of ray
+	Vector2D _dir = Vector2D(rotation);		
 	_dir.rotate(_rad);
-	Vector2D _center = pos + headPos;
+
+	Vector2D _center = pos + headPos;	// Starting position of tracing
+
+	// Trace
 	for (double i = 0; i <= rangeMax; i++) {
-		Vector2D _point = _center + (_dir * i);
+
+		Vector2D _point = _center + (_dir * i);		// Point of tracing
+
+		// Error computing
+		double _error = 0;							// Variable used thile computing range error
+		int _rand = (rand() % 1000) - 500;			// Random number ( -500..499 )
+		_error = _rand;								// Int -> Double
+		_error /= 1000;								// Error multipiler
+		_error = rangeMax * (rangeError * _error);	// Actual range error
+
+		// If there is obstacle in point position
 		if (map[int(_point.x)][int(_point.y)]) {
-			if (i < rangeMin) return rangeLess;
+			// If its less than minimal range
+			if (i + _error < rangeMin) return rangeLess;
+			
+			// If its in range of trace
 			else {
-				scanPoints.push_back(_point);
-				return i;
+				scanPoints.push_back(_center + (_dir * (i + _error)));	// Add point (with error) to the points vector
+				return i + _error;							// Return trace distance (with error)
 			}
 		}
 	}
