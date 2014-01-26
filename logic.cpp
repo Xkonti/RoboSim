@@ -1,7 +1,7 @@
 #pragma once
 
 // Local debugging switch
-#define DEBUG_LOGIC (1)
+#define DEBUG_LOGIC (0)
 
 
 //////////////////////////////////////////
@@ -14,7 +14,7 @@
 // LOGIC CONSTRUCTOR/DESTRUCTOR
 //////////////////////////////////////////
 																					   // TEMP //
-Logic::Logic(XkontiConsoleColors& _con, Robot& _robot) : con{ _con }, robot{ _robot }, frame{ 0 }, stepVelocity{ 0 } {}
+Logic::Logic(XkontiConsoleColors& _con, Robot& _robot, std::vector<double>& _scanDistances) : minSideWeight{ 0.5 }, con{ _con }, robot{ _robot }, scanDistances{ _scanDistances }, frame{ 0 }, stepVelocity{ 0 } {}
 Logic::~Logic() {}
 
 bool Logic::init() {
@@ -22,28 +22,29 @@ bool Logic::init() {
 
 	robot.initBody(
 	//	Size				Position
-		Vector2D(10, 9),	Vector2D(400, 100),
+		Vector2D(10, 9),	Vector2D(100, 100),
 
 	//	Rot.	MaxVel.		Max Angular Velocity
 		0,		90,			degToRad(120));
 
 	robot.initHead(
 	//	Position			Rotation Range
-		Vector2D(2, 0),		Vector2D(-PI / 2, PI / 2),
+		Vector2D(1, 0),		Vector2D(-PI / 2, PI / 2),
 		
 	//	MinRange	MaxRange
-		10,			300,
+		10,			160,
 		
 	//	ErrorRange	Resolution
-		0.05,		30,
+		0.01,		50,
 		
 	//	RangeLess	RangeOver
-		0,			320);
+		5,			170);
 	return true;
 }
 
 std::vector<double> Logic::scan() {
-	return robot.scan();
+	scanDistances = robot.scan();
+	return scanDistances;
 }
 
 Vector2D Logic::computeMovement(std::vector<double> _scan) {
@@ -63,14 +64,13 @@ double Logic::computeRotation(std::vector<double>& _scan) {
 	double _offset = _scan.size() / 2;		// Center of scan data
 
 	double _rotation = 0;					// Rotation - returned in Vector2D.y
-	double _min = 0.5;						// Weight of data on min and max angle
 	double _temp = 0;						// Variable used in computing
 
 	// Computing rotation
 	for (unsigned int i = 0; i < _scan.size(); i++) {
 		_temp = (i - _offset) * _step;	// Get angle of scan[i]
 		_temp *= _scan[i] / _over;		// Multiply by value of scan[i] in range of 0..1
-		_temp *= computeLinearMultipiler(_min, _scan.size(), i);	// Multiply by weight of _scan[i] (according to its angle)
+		_temp *= computeLinearMultipiler(minSideWeight, _scan.size(), i);	// Multiply by weight of _scan[i] (according to its angle)
 		_rotation += _centerAng + _temp;	// Add assembled angle
 	}
 

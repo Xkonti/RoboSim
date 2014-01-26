@@ -11,6 +11,8 @@
 #include <allegro5/allegro.h>
 #include "allegro5/allegro_image.h"
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include "interface.h"
 
 //////////////////////////////////////////
@@ -19,6 +21,7 @@
 
 void drawLine(Vector2D _start, Vector2D _end);
 void drawRect(Vector2D _center, double _width, double _height, double _rotation);
+void drawRect(Vector2D _upLeft, Vector2D _downRight);
 void drawPolygon(Vector2D _center, double _width, double _rotation, unsigned int _faces);
 
 
@@ -38,7 +41,6 @@ public:
 	void cycleEnd();		// Tells allegro about end of game cycle
 	double dt();			// Returns delta time. Time passed from end of last cycle.
 	double getFps();			// Returns Frames Per Seconds
-	double getAFps();			// Returns Average Frames Per Seconds
 
 	ALLEGRO_DISPLAY* display;		// Have to be public. Allegro library need access to it.
 	ALLEGRO_EVENT_QUEUE* event_queue;
@@ -54,6 +56,5 @@ private:
 	double lastFrame;						// Delta Time - Duration of last Cycle
 	double lastTime;				// Time of last full game cycle
 	double fps;						// Frames Per Second
-	double aFps;					// Average Frames Per Second
 
 };

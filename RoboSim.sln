@@ -5,16 +5,40 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoboSim", "RoboSim.vcxproj", "{83355CEB-D869-4FB8-88CC-4559383E839F}"
 EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "RoboSim2D", "..\RoboSim2D\RoboSim2D.isproj", "{454C27E8-5904-4743-BE8C-21D94661BF95}"
+	ProjectSection(ProjectDependencies) = postProject
+		{83355CEB-D869-4FB8-88CC-4559383E839F} = {83355CEB-D869-4FB8-88CC-4559383E839F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Win32 = CD_ROM|Win32
 		Debug|Win32 = Debug|Win32
+		DVD-5|Win32 = DVD-5|Win32
 		Release|Win32 = Release|Win32
+		SingleImage|Win32 = SingleImage|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83355CEB-D869-4FB8-88CC-4559383E839F}.CD_ROM|Win32.ActiveCfg = Release|Win32
+		{83355CEB-D869-4FB8-88CC-4559383E839F}.CD_ROM|Win32.Build.0 = Release|Win32
 		{83355CEB-D869-4FB8-88CC-4559383E839F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{83355CEB-D869-4FB8-88CC-4559383E839F}.Debug|Win32.Build.0 = Debug|Win32
+		{83355CEB-D869-4FB8-88CC-4559383E839F}.DVD-5|Win32.ActiveCfg = Debug|Win32
+		{83355CEB-D869-4FB8-88CC-4559383E839F}.DVD-5|Win32.Build.0 = Debug|Win32
 		{83355CEB-D869-4FB8-88CC-4559383E839F}.Release|Win32.ActiveCfg = Release|Win32
 		{83355CEB-D869-4FB8-88CC-4559383E839F}.Release|Win32.Build.0 = Release|Win32
+		{83355CEB-D869-4FB8-88CC-4559383E839F}.SingleImage|Win32.ActiveCfg = Release|Win32
+		{83355CEB-D869-4FB8-88CC-4559383E839F}.SingleImage|Win32.Build.0 = Release|Win32
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.CD_ROM|Win32.ActiveCfg = CD_ROM
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.CD_ROM|Win32.Build.0 = CD_ROM
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.Debug|Win32.ActiveCfg = DVD-5
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.Debug|Win32.Build.0 = DVD-5
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.DVD-5|Win32.ActiveCfg = DVD-5
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.DVD-5|Win32.Build.0 = DVD-5
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.Release|Win32.ActiveCfg = SingleImage
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.Release|Win32.Build.0 = SingleImage
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.SingleImage|Win32.ActiveCfg = SingleImage
+		{454C27E8-5904-4743-BE8C-21D94661BF95}.SingleImage|Win32.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

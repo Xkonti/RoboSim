@@ -1,7 +1,7 @@
 #pragma once
 
 // Local debugging switch
-	#define DEBUG_ALLEGROHELPER (1)
+	#define DEBUG_ALLEGROHELPER (0)
 
 
 //////////////////////////////////////////
@@ -41,6 +41,21 @@ void drawRect(Vector2D _center, double _width, double _height, double _rotation)
 	drawLine(_temp1, _temp2);
 }
 
+void drawRect(Vector2D _upLeft, Vector2D _downRight) {
+	Vector2D _start = _upLeft;
+	Vector2D _end = Vector2D(_downRight.x, _upLeft.y);
+	drawLine(_start, _end);
+	_start = _end;
+	_end = _downRight;
+	drawLine(_start, _end);
+	_start = _end;
+	_end = Vector2D(_upLeft.x, _downRight.y);
+	drawLine(_start, _end);
+	_start = _end;
+	_end = _upLeft;
+	drawLine(_start, _end);
+}
+
 void drawPolygon(Vector2D _center, double _width, double _rotation, unsigned int _faces) {
 	_width /= 2;
 	double _step = PI * 2 / _faces;		// Angle between 2 points
@@ -65,7 +80,7 @@ void drawPolygon(Vector2D _center, double _width, double _rotation, unsigned int
 
 Allegro::Allegro()
 :display{ nullptr }, event_queue{ nullptr }, con{ nullptr },
-avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastFrame{ 1/60 }, lastTime{ 0 }, fps{ 60 }, aFps{ 60 } {}
+avrBuf{ 120 }, width{ 0 }, height{ 0 }, lastFrame{ 1/60 }, lastTime{ 0 }, fps{ 60 } {}
 
 
 Allegro::~Allegro() {
@@ -120,6 +135,28 @@ bool Allegro::init(XkontiConsoleColors* _con) {
 	con->print(debug, "-- Allegro::init - al_init_primitives_addon() successful\n");
 #endif
 
+	// Initialization of Font Addon
+	al_init_font_addon();
+	if (!al_init_ttf_addon()) {
+		con->print(fatal, "Failed to initialize al_init_font_addon() and al_init_ttf_addon!\n");
+		return false;
+	}
+#if(DEBUG_ALLEGROHELPER)
+	con->print(debug, "-- Allegro::init - al_init_font_addon() successful\n");
+#endif
+
+	if (!al_install_keyboard()) {
+		fprintf(stderr, "failed to initialize the keyboard!\n");
+		return -1;
+	}
+	if (!al_install_mouse()) {
+		fprintf(stderr, "failed to initialize the mouse!\n");
+		return -1;
+	}
+#if(DEBUG_ALLEGROHELPER)
+	con->print(debug, "-- Allegro::init - al_install_keyboard() and al_install_mouse() successful\n");
+#endif
+
 	lastTime = al_get_time();
 
 #if(DEBUG_ALLEGROHELPER)
@@ -162,6 +199,8 @@ bool Allegro::setup(int _width, int _height) {
 		return false;
 	}
 	al_register_event_source(event_queue, al_get_display_event_source(display));
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue, al_get_mouse_event_source());
 #if(DEBUG_ALLEGROHELPER)
 	con->print(debug, "-- Allegro::setup - al_create_event_queue() successful\n");
 #endif
@@ -180,16 +219,15 @@ bool Allegro::setup(int _width, int _height) {
 
 void Allegro::timeStart() {
 	fps = 60;
-	aFps = 60;
 	lastFrame = 1 / 60;
 	lastTime = al_get_time();
 }
 
 void Allegro::cycleEnd() {
 	fps = 1 / lastFrame;
-	aFps = (aFps * (avrBuf - 1) / avrBuf) + (fps / avrBuf);
-	lastFrame = al_get_time() - lastTime;
-	lastTime = al_get_time();
+	double _time = al_get_time();
+	lastFrame = _time - lastTime;
+	lastTime = _time;
 }
 
 double Allegro::dt() {
@@ -198,8 +236,4 @@ double Allegro::dt() {
 
 double Allegro::getFps() {
 	return fps;
-}
-
-double Allegro::getAFps() {
-	return aFps;
 }

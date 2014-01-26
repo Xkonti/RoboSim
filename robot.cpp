@@ -1,7 +1,7 @@
 #pragma once
 
 // Local debugging switch
-#define DEBUG_ROBOT (1)
+#define DEBUG_ROBOT (0)
 
 
 //////////////////////////////////////////
@@ -50,6 +50,13 @@ void Robot::initHead(Vector2D _pos, Vector2D _rotRange, double _rangeMin, double
 void Robot::setPos(Vector2D _newPos) { pos = _newPos; }
 void Robot::setPos(double _x, double _y) { pos.x = _x; pos.y = _y; }
 void Robot::setRotation(double _rad) { rotation = _rad; }
+
+void Robot::setResolution(unsigned int _res) { resolution = _res; }
+void Robot::setHeadRotRange(Vector2D _rotRange) { headRotRange = _rotRange; }
+void Robot::setMinRange(double _range) { rangeMin = _range; }
+void Robot::setMaxRange(double _range) { rangeMax = _range; }
+void Robot::setRangeOver(double _range) { rangeOver = _range; }
+void Robot::setRangeLess(double _range) { rangeLess = _range; }
 
 
 //////////////////////////////////////////
@@ -157,7 +164,7 @@ void Robot::update(double dt) {
 	}
 }
 
-void Robot::draw(double dt) {
+void Robot::draw(double dt, bool _drawSight) {
 
 	// Draw Body
 	drawRect(pos, size.x, size.y, rotation);
@@ -173,13 +180,13 @@ void Robot::draw(double dt) {
 	Vector2D _head = pos + headPos.rotated(rotation);
 	drawPolygon(_head, size.x/4, rotation+PI, 3);
 
-	// /*
 	// Draw Robot Sight Rays
-	double _step = this->getHeadStep();
-	for (unsigned int i = 0; i < resolution; i++) {
-		drawLine(_head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMin), _head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMax));
+	if (_drawSight) {
+		double _step = this->getHeadStep();
+		for (unsigned int i = 0; i < resolution; i++) {
+			drawLine(_head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMin), _head + (Vector2D(rotation + headRotRange.x + (_step*i)) * rangeMax));
+		}
 	}
-	// */
 }
 
 
@@ -199,17 +206,17 @@ double Robot::trace(double _rad) {
 
 	Vector2D _center = pos + headPos;	// Starting position of tracing
 
+	// Error computing
+	double _error = 0;							// Variable used thile computing range error
+	int _rand = (rand() % 1000) - 500;			// Random number ( -500..499 )
+	_error = _rand;								// Int -> Double
+	_error /= 1000;								// Error multipiler
+	_error = rangeMax * (rangeError * _error);	// Actual range error
+
 	// Trace
 	for (double i = 0; i <= rangeMax; i++) {
 
 		Vector2D _point = _center + (_dir * i);		// Point of tracing
-
-		// Error computing
-		double _error = 0;							// Variable used thile computing range error
-		int _rand = (rand() % 1000) - 500;			// Random number ( -500..499 )
-		_error = _rand;								// Int -> Double
-		_error /= 1000;								// Error multipiler
-		_error = rangeMax * (rangeError * _error);	// Actual range error
 
 		// If there is obstacle in point position
 		if (map[int(_point.x)][int(_point.y)]) {
@@ -223,5 +230,6 @@ double Robot::trace(double _rad) {
 			}
 		}
 	}
-	return rangeOver;
+	scanPoints.push_back(_center + (_dir * (rangeOver + _error)));
+	return rangeOver + _error;
 }

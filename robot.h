@@ -38,6 +38,13 @@ public:
 	void setPos(double _x, double _y);
 	void setRotation(double _rad);
 
+	void setResolution(unsigned int _res);
+	void setHeadRotRange(Vector2D _rotRange);
+	void setMinRange(double _range);
+	void setMaxRange(double _range);
+	void setRangeOver(double _range);
+	void setRangeLess(double _range);
+
 	// Get Functions
 	Vector2D getPos();
 	Vector2D getHeadPos();
@@ -65,7 +72,7 @@ public:
 
 	// Periodical Functions
 	void update(double dt);
-	void draw(double dt);
+	void draw(double dt, bool _drawSight);
 
 private:
 	// Body functions

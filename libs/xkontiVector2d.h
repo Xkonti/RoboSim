@@ -39,7 +39,9 @@ public:
 	// Operators
 	void operator = (Vector2D _a);
 	Vector2D operator + (Vector2D _a);
+	Vector2D operator + (double _a);
 	Vector2D operator - (Vector2D _a);
+	Vector2D operator - (double _a);
 	Vector2D operator * (Vector2D _a);
 	Vector2D operator * (double _a);
 	Vector2D operator / (Vector2D _a);

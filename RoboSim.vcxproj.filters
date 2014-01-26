@@ -18,9 +18,6 @@
     <ClCompile Include="RoboSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="allegroHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="robot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,11 +33,11 @@
     <ClCompile Include="logic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="allegroHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="allegroHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="robot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="logic.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="allegroHelper.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

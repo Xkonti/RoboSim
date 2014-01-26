@@ -45,8 +45,16 @@ Vector2D Vector2D::operator + (Vector2D _a) {
 	return Vector2D(x + _a.x, y + _a.y);
 }
 
+Vector2D Vector2D::operator + (double _a) {
+	return Vector2D(x + _a, y + _a);
+}
+
 Vector2D Vector2D::operator - (Vector2D _a) {
 	return Vector2D(x - _a.x, y - _a.y);
+}
+
+Vector2D Vector2D::operator - (double _a) {
+	return Vector2D(x - _a, y - _a);
 }
 
 Vector2D Vector2D::operator * (Vector2D _a) {

@@ -20,7 +20,7 @@
 
 class Logic {
 public:
-	Logic(XkontiConsoleColors& _con, Robot& _robot);
+	Logic(XkontiConsoleColors& _con, Robot& _robot, std::vector<double>& _scanDistances);
 	~Logic();
 
 	bool init();
@@ -34,6 +34,9 @@ public:
 
 	// Periodical Functions
 	void update(double dt);
+	std::vector<double>& scanDistances;
+
+	double minSideWeight;
 private:
 	XkontiConsoleColors& con;
 	Robot& robot;
