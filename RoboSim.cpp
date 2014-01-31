@@ -93,7 +93,7 @@ bool init() {
 #endif
 
 	// Get user data
-	con.print("Witaj w RoboSim!\n\nPodaj nazwe mapy:\n");
+	con.print(good, "Witaj w RoboSim!\n\nPodaj nazwe mapy:\n");
 	//std::string _path = con.inString();
 	std::string _path;
 	std::cin >> _path;
